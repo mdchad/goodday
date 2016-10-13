@@ -31,7 +31,6 @@ gem 'cloudinary'
 gem 'ransack'
 gem 'will_paginate', '~> 3.1.0'
 gem 'acts_as_commentable_with_threading'
-gem 'cloudinary'
 gem 'acts_as_votable', '~> 0.10.0'
 gem 'omniauth'
 
