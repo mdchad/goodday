@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<%= cl_image_tag(@campaign.picture, :width => 400) unless @campaign.picture.blank? %>
+<p>
+  <strong>Title:</strong>
+  <%= @campaign.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @campaign.description %>
+</p>
+
+<p>
+  <strong>Deadline:</strong>
+  <%= @campaign.deadline %>
+</p>
+
+<p>
+  <strong>Beneficiary:</strong>
+  <%= @campaign.beneficiary.name %>
+</p>
+
+<p>
+  <strong>Target:</strong>
+  <%= number_to_currency(@campaign.target_amount, :unit => "S$") %>
+</p>
+
+
+<%= link_to 'Back', campaigns_path %>
+
+<%= render partial: "comments/template", locals: {commentable: @campaign, new_comment: @comment} %>

@@ -1,0 +1,46 @@
+<nav>
+  <input class="menu-btn navbar" type="checkbox" id="menu-btn">
+  <label class="menu-icon navbar" for="menu-btn"><span class="navicon"></span></label>
+  <ul id="nav-menu">
+    <% if current_user.present? %>
+    <li class="nav-label">
+      <button id="myBtn" type="button" name="button"><i class="fa fa-search fa-lg" aria-hidden="true"></i></button>
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+           <div class="modal-header twelve columns">
+             <span class="close">&times</span>
+             <%= search_form_for @q do |f| %>
+               <%= f.search_field :title_or_description_cont, class:"nine columns no-bottom"%>
+               <%= f.submit nil, class:"no-bottom left-space" %>
+             <% end %>
+           </div>
+        </div>
+      </div>
+    </li>
+    <li class="nav-label">
+      <%= link_to "Charities", beneficiaries_index_path, id: "nav-right2" %>
+    </li>
+    <li class="nav-right">
+      <%= link_to "#{current_user.name}", profile_path %>
+    </li>
+    <li class="nav-right">
+      <%= link_to 'Logout', logout_path, method: :delete %>
+    </li>
+    <% else %>
+    <li class="nav-label">
+      <h3><%= link_to "Soulify", root_path, class: "nav-label head-title"%></h3>
+    </li>
+    <li class="nav-label">
+      <%= link_to "How it works", how_index_path, id: "nav-right"%>
+    </li>
+    <li class="nav-right">
+      <%= link_to 'Register', register_path%>
+    </li>
+    <li class="nav-right">
+      <%= link_to 'Login', login_path%>
+    </li>
+
+
+    <% end %>
+  </ul>
+</nav>

@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="six columns offset-by-three space-top">
+    <%= form_for(volunteer) do |f| %>
+      <% if volunteer.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(volunteer.errors.count, "error") %> prohibited this volunteer from being saved:</h2>
+
+          <ul>
+          <% volunteer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, placeholder: "Volunteer", class: "u-full-width" %>
+      </div>
+      <%= f.hidden_field :quantity, :value=> 1 %>
+
+      <%= f.hidden_field :campaign_id, :value=> id %>
+
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+    <% end %>
+
+    <%= link_to 'Back', campaigns_path %>
+  </div>
+</div>

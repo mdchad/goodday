@@ -1,0 +1,10 @@
+<aside class="vote-count bind-<%= goal.id %>">
+ <%= link_to like_goal_path(goal), :remote => true, method: :put, class: 'vpos' do %>
+  <i class="fa fa-thumbs-up"></i>
+  <span class="vcount-<%= goal.id %>"><%= goal.get_upvotes.size %></span>
+ <% end %>
+ <%= link_to dislike_goal_path(goal), :remote => true, method: :put, class: 'npos' do %>
+  <i class="fa fa-thumbs-down"></i>
+  <span class="ncount-<%= goal.id %>"><%= goal.get_downvotes.size %></span>
+ <% end %>
+</aside>

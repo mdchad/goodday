@@ -1,0 +1,223 @@
+<% if current_user.present? %>
+<div class="container">
+  <h5>Trending Goals</h5>
+  <div class="row">
+    <% @goals.first(3).each do |goal| %>
+    <div class="one-third column bottom-20" style="border: solid 0.5px #F1EEEA; border-radius:10px;padding: 20px;">
+      <h6 class="project-title"><strong><%= goal.title %></strong></h6>
+      <p class="project-byline"><%= goal.user.name %></p>
+      <%= cl_image_tag(goal.picture, :height => 150) unless goal.picture.blank? %>
+      <button id="myBtn10" type="button" name="button" onclick="var x = document.getElementById('descriptionGoal<%= goal.id %>'); if (x.style.display === 'none') {x.style.display = 'block';} else {x.style.display = 'none';}">See description</button>
+       <div id="descriptionGoal<%= goal.id %>" class="twelve columns hide">
+           <%= goal.description %>
+       </div>
+      <p class="project-content-extra"><%= goal.beneficiary.name %></p>
+      <div class="progress-bar blue stripes orange twelve columns">
+        <span style="width: <%= (goal.pledges_total/goal.target_amount)*100 %>%"></span>
+      </div>
+      <ul class="twelve columns">
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.target_amount, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Target</span>
+        </li>
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.penalty_amount, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Penalty</span>
+        </li>
+        <li class="project-footer">
+          <strong><%= goal.deadline %></strong>
+          <span class="project-footer-extra">deadline</span>
+        </li>
+      </ul>
+      <ul class="twelve columns" style="margin-top:80px">
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.pledges_total, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Total pledged</span>
+        </li>
+      </ul>
+      <h6>
+        <%= link_to like_goal_path(goal), remote: true, class: 'like', method: :put do %>
+          <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+          <span id="upvotes-<%=goal.id%>"><%= goal.get_upvotes.size %></span>
+        <% end %>
+
+
+        <%= link_to dislike_goal_path(goal), remote: true, class: 'dislike', method: :put do %>
+        <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+        <span id="downvotes-<%=goal.id%>"><%= goal.get_downvotes.size %></span>
+        <% end %>
+      </h6>
+      <%= form_for(@pledge) do |f| %>
+      <% if @pledge.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@pledge.errors.count, "error") %> prohibited this pledge from being saved:</h2>
+        <ul>
+          <% @pledge.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :amount %>
+        <%= f.number_field :amount, placeholder: "Pledge amount", class: "u-full-width" %>
+      </div>
+      <%= f.hidden_field :goal_id, :value=> goal.id %>
+      <div class="actions">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+        data-description="<%= goal.title %>"
+        data-email="<%= goal.user.email %>"
+        data-amount="<%= @pledge.amount %>">
+        </script>
+        <%= f.submit %>
+      </div>
+      <% end %>
+
+
+    </div>
+    <% end %>
+  </div>
+  <br>
+  <%= button_to 'Learn more', goals_path, :method => :get, class:"hvr-bounce-to-right" %>
+</div>
+<% else %>
+<div class="row hero">
+  <div class="twelve columns offset-by-four whitespace">
+    <h1 class="change">Change</h1>
+    <span class="element">
+    </span>
+  </div>
+</div>
+<div class="row">
+  <div class="twelve columns">
+    <div class="campaign-card whitespace">
+      <div class="thumbnail">
+        <a href="#">
+          <%= image_tag("Sport-Relief.jpg", height: '235', width: '410') %>
+        </a>
+      </div>
+      <div class="project-footer"></div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <h4>Featured Goals<h4>
+    <% @goals.each do |goal| %>
+      <div class="one-third column bottom-20" style="border: solid 0.5px #F1EEEA; border-radius:10px;padding: 20px;">
+        <h6 class="project-title"><strong><%= goal.title %></strong></h6>
+        <p class="project-byline orange-color"><%= goal.user.name %></p>
+        <%= cl_image_tag(goal.picture, :height => 150) unless goal.picture.blank? %>
+
+
+        <p class="project-content-extra"><%= goal.beneficiary.name %></p>
+        <div class="progress-bar blue stripes orange twelve columns">
+          <span style="width: <%= (goal.pledges_total/goal.target_amount)*100 %>%"></span>
+        </div>
+        <ul class="twelve columns">
+          <li class="project-footer">
+            <strong>$<%= goal.target_amount %></strong>
+            <span class="project-footer-extra">Target</span>
+          </li>
+          <li class="project-footer">
+            <strong>$<%= goal.penalty_amount %></strong>
+            <span class="project-footer-extra">Penalty</span>
+          </li>
+          <li class="project-footer">
+            <strong><%= goal.deadline %></strong>
+            <span class="project-footer-extra">deadline</span>
+          </li>
+        </ul>
+        <ul class="twelve columns">
+          <li class="project-footer">
+            <strong>$<%= goal.pledges_total %></strong>
+            <span class="project-footer-extra">Total pledged</span>
+          </li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+</div>
+<br>
+<div class="row footer">
+  <div class="container">
+    <div class="three columns">
+      <h5 class="footer-title">About Us</h5>
+      <ul>
+        <li class="white"><a class="white" href="#">What is Chivalrous?</a></li>
+        <li class="white"><a class="white" href="#">Who we are</a></li>
+        <li class="white"><a class="white" href="#">Jobs</a></li>
+        <li class="white"><a class="white" href="#">Newsletters</a></li>
+      </ul>
+    </div>
+    <div class="three columns">
+      <h5 class="footer-title">Help</h5>
+      <ul>
+        <li class="white"><a class="white" href="#">FAQ</a></li>
+        <li class="white"><a class="white" href="#">Our Rules</a></li>
+        <li class="white"><a class="white" href="#">Creator Handbook</a></li>
+        <li class="white"><a class="white" href="#">Campus</a></li>
+        <li class="white"><a class="white" href="#">Trust & Safety</a></li>
+        <li class="white"><a class="white" href="#">Support</a></li>
+        <li class="white"><a class="white" href="#">Terms of Use</a></li>
+        <li class="white"><a class="white" href="#">Privacy Policy</a></li>
+        <li class="white"><a class="white" href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="three columns">
+      <h5 class="footer-title">Help</h5>
+      <ul>
+        <li class="white"><a class="white" href="#">FAQ</a></li>
+        <li class="white"><a class="white" href="#">Our Rules</a></li>
+        <li class="white"><a class="white" href="#">Creator Handbook</a></li>
+        <li class="white"><a class="white" href="#">Campus</a></li>
+        <li class="white"><a class="white" href="#">Trust & Safety</a></li>
+        <li class="white"><a class="white" href="#">Support</a></li>
+        <li class="white"><a class="white" href="#">Terms of Use</a></li>
+        <li class="white"><a class="white" href="#">Privacy Policy</a></li>
+        <li class="white"><a class="white" href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+    <div class="three columns">
+      <h5 class="footer-title">Help</h5>
+      <ul>
+        <li class="white"><a class="white" href="#">FAQ</a></li>
+        <li class="white"><a class="white" href="#">Our Rules</a></li>
+        <li class="white"><a class="white" href="#">Creator Handbook</a></li>
+        <li class="white"><a class="white" href="#">Campus</a></li>
+        <li class="white"><a class="white" href="#">Trust & Safety</a></li>
+        <li class="white"><a class="white" href="#">Support</a></li>
+        <li class="white"><a class="white" href="#">Terms of Use</a></li>
+        <li class="white"><a class="white" href="#">Privacy Policy</a></li>
+        <li class="white"><a class="white" href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+
+    <div class="seven columns no-margin">
+      <h4 class="newsletter">Sign up for our newsletter</h4>
+      <form class="" action="index.html" method="post">
+        <input class="eight columns"placeholder="Your email address" type="email">
+        <button class="orange-button">Sign up</button>
+      </form>
+    </div>
+    <div class="four columns social-margin">
+      <h4 class="follow">Follow us</h4>
+      <a class="a-noncolor" href="http://www.facebook.com"><i class="fa fa-facebook-official fa-lg social-media" aria-hidden="true"></i></a>
+      <a class="a-noncolor" href="http://www.twitter.com"><i class="fa fa-twitter fa-lg social-media" aria-hidden="true"></i></a>
+      <a class="a-noncolor" href="http://www.instagram.com"><i class="fa fa-instagram fa-lg social-media" aria-hidden="true"></i></a>
+      <a class="a-noncolor" href="http://www.youtube.com"><i class="fa fa-youtube-play fa-lg social-media" aria-hidden="true"></i></a>
+    </div>
+  </div>
+</div>
+<script>
+    $(function(){
+        $(".element").typed({
+            strings: ["yourself" , "or", "the world"],
+            typeSpeed: 0
+        });
+    });
+</script>
+
+<% end %>

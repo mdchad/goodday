@@ -1,0 +1,22 @@
+
+<div class="container">
+  <div class="six columns offset-by-three space-top" style="margin-top: 50px;">
+    <%= form_for :user do |f| %>
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email, :required => true, class: "u-full-width" %>
+      </div>
+      <div class="field">
+        <%= f.label :password %>
+        <%= f.password_field :password, :required => true, class: "u-full-width" %>
+      </div>
+      <div class="action">
+        <%= f.submit "Login" %>
+      </div>
+      <%= link_to 'New user? Sign up here', register_path, class:"hvr-underline-from-center" %>
+    <% end %>
+    <div class="twelve columns">
+      <a href="/auth/facebook" class="hvr-bounce-to-right orange-background">Sign in with Facebook</a>
+    </div>
+  </div>
+</div>

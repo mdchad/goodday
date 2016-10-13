@@ -1,0 +1,147 @@
+<div class="row campaign-style">
+  <div class="twelve columns">
+    <div class='polygon'>
+      <div class='flap flap-1'></div>
+      <div class='flap flap-2'></div>
+      <div class='flap flap-3'></div>
+      <div class='flap flap-4'></div>
+      <div class='flap flap-5'></div>
+      <div class='flap flap-6'></div>
+    </div>
+    <h1 class="orange-color center-text campaign-header">Campaigns</h1>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+duplicate
+
+-->
+
+
+
+
+<div class="container">
+  <div class="row">
+  <% @campaigns.each do |campaign| %>
+    <div class="twelve columns bottom-20" style="border: solid 0.5px #F1EEEA; border-radius:10px;padding: 20px;">
+      <div class="six columns">
+        <%= cl_image_tag(campaign.picture, :width => 400, :height => 400) unless campaign.picture.blank? %>
+      </div>
+      <div class="six columns">
+        <h4 class="project-title"><strong><%= campaign.title %></strong></h4>
+      </div>
+      <div class="six columns" style="margin-top:10px;">
+        <p class="project-content"><%= campaign.description %></p>
+      </div>
+      <div class="twelve columns" style="margin-top: -20px">
+        <small>Beneficiary:</small>
+        <h5 class="project-content-extra"><%= campaign.beneficiary.name %></h5>
+
+      </div>
+      <div class="twelve columns">
+        <ul class="ten columns">
+          <li class="project-footer">
+            <strong>$<%= campaign.target_amount %></strong>
+            <span class="project-footer-extra">Target</span>
+          </li>
+          <li class="project-footer">
+            <strong><%= campaign.deadline %></strong>
+            <span class="project-footer-extra">Deadline</span>
+          </li>
+        </ul>
+        <ul class="two columns" style="text-align:right">
+          <li class="project-footer">
+            <strong>$<%= campaign.donations_total %></strong>
+            <span class="project-footer-extra">Total pledged</span>
+          </li>
+        </ul>
+      </div>
+      <div class="twelve columns">
+        <div class="progress-bar blue stripes orange twelve columns">
+          <span style="width: <%= (campaign.donations_total/campaign.target_amount)*100 %>%"></span>
+        </div>
+      </div>
+      <br />
+
+      <%= form_for(@donation) do |f| %>
+      <% if @donation.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@donation.errors.count, "error") %> prohibited this donation from being saved:</h2>
+        <ul>
+          <% @donation.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+      <div class="twelve columns" style="margin:30px 0;">
+        <div class="field">
+          <%= f.number_field :amount, placeholder: "Pledge amount", class: "six columns", style: "margin-right:140px;" %>
+        </div>
+        <%= f.hidden_field :campaign_id, :value=> campaign.id %>
+        <div class="actions">
+          <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+          data-description="<%= campaign.title %>"
+          data-email="<%= campaign.user.email %>"
+          data-amount="<%= @donation.amount %>">
+          </script>
+          <%= f.submit "support the campaign", class: "four columns " %>
+        <% end %>
+        </div>
+      </div>
+      <ul class="twelve columns">
+        <% campaign.volunteers_total.times do |i| %>
+        <i class="fa fa-odnoklassniki" aria-hidden="true"></i>
+        <% end %>
+      </ul>
+
+      <div class="twelve columns">
+        <p class="ten columns">
+        <%= campaign.volunteers_total %> people have signed up for the cause. Join them in raising awareness for migrant workers!
+        </p>
+
+        <div class="two columns" style="margin: 0">
+          <%= form_for(@volunteer) do |f| %>
+            <% if @volunteer.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(@volunteer.errors.count, "error") %> prohibited this volunteer from being saved:</h2>
+
+                <ul>
+                <% @volunteer.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <div class="field">
+              <%= f.hidden_field :name, :value=> @current_user.name %>
+            </div>
+            <%= f.hidden_field :quantity, :value=> 1 %>
+
+            <%= f.hidden_field :campaign_id, :value=> campaign.id %>
+
+            <div>
+              <%= f.submit "Volunteer" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  </div>
+
+</div>

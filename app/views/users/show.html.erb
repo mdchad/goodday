@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <div class="three columns">
+      <p>
+      <%= image_tag(@user.provider_img)%>
+      </p>
+    </div>
+    <div class="six columns">
+      <h1><%= @user.first_name %></h1>
+      <p>
+        <strong>Family Name:</strong>
+        <%= @user.family_name %>
+      </p>
+      <p>
+        <strong>Email:</strong>
+        <%= @user.email %>
+      </p>
+    </div>
+    <div class="four columns">
+      <%= link_to 'Edit Profile', profile_edit_path, class:"hvr-underline-from-center" %>
+      <%= link_to 'Goals', goals_path, class:"hvr-underline-from-center left-space" %>
+      <%= link_to 'Campaigns', campaigns_path, class:"hvr-underline-from-center left-space" %>
+    </div>
+  </div>
+
+
+
+</div>

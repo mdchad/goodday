@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row">
+    <div class="six columns offset-by-three space-top">
+      <%= form_for(goal) do |f| %>
+      <% if goal.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(goal.errors.count, "error") %> prohibited this goal from being saved:</h2>
+
+        <ul>
+          <% goal.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :title %>
+        <%= f.text_field :title, placeholder: "title", class: "u-full-width" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :picture %>
+        <%= f.file_field :picture %>
+      </div>
+
+      <div class="field">
+        <%= f.label :description %>
+        <%= f.text_area :description, placeholder: "description", class: "u-full-width" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :target_amount %>
+        <%= f.number_field :target_amount, placeholder: "target amount", class: "u-full-width" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :penalty_amount %>
+        <%= f.number_field :penalty_amount, placeholder: "penalty amount", class: "u-full-width" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :deadline %>
+        <%= f.date_field :deadline, placeholder: "deadline" %>
+      </div>
+
+      <div class="field">
+        <%= f.label :beneficiary_id %>
+        <%= f.select :beneficiary_id, Beneficiary.all.collect {|x| [x.name, x.id]} %>
+      </div>
+      <br>
+      <div class="actions">
+        <%= f.submit %>
+      </div>
+      <% end %>
+
+      <%= link_to 'Back', goals_path %>
+    </div>
+  </div>
+</div>

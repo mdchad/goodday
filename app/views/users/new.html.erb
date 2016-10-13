@@ -1,0 +1,49 @@
+
+<div class="container">
+  <div class="row">
+    <div class="six columns offset-by-three space-top">
+      <h2 class="action">Register</h2>
+      <div class="twelve columns action">
+        <a href="/auth/facebook" class="orange-background hvr-bounce-to-right">
+          <i class="fa fa-facebook fa-lg right-space" aria-hidden="true"></i>
+            Sign up with Facebook</a>
+      </div>
+      <%= form_for @user, url: register_path do |f| %>
+        <% if @user.errors.any? %>
+          <div id="error_explanation">
+            <h3><%= pluralize(@user.errors.count, "error") %> prohibited this blog from being saved:</h3>
+
+            <ul>
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <div class="field">
+          <%= f.label :first_name %>
+          <%= f.text_field :first_name, :required => true, class: "u-full-width" %>
+        </div>
+          <div class="field">
+            <%= f.label :family_name %>
+            <%= f.text_field :family_name, :required => true, class: "u-full-width" %>
+          </div>
+        <div class="field">
+          <%= f.label :email %>
+          <%= f.email_field :email, :required => true, class: "u-full-width" %>
+        </div>
+        <div class="field">
+          <%= f.label :password %>
+          <%= f.password_field :password, :required => true %>
+        </div>
+        <div class="field">
+          <%= f.label :password_confirmation %>
+          <%= f.password_field :password_confirmation, :required => true %>
+        </div>
+        <div class="actions">
+          <%= f.submit "Register" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="container">
+  <%= button_to 'Set a new goal', new_goal_path, :method => :get, class:"hvr-bounce-to-right"%>
+  Sort by
+  <%= sortable "created_at","Date"%> |
+  <%= sortable "target_amount","Target Amount" %> |
+  <%= sortable "cached_votes_score", "Trending" %> |
+  <%= sortable "total_pledged_amount", "Pledged amount" %>
+  <br>
+  <br>
+  <br>
+  <div class="row">
+    <% @goals.each do |goal| %>
+    <div class="one-third column bottom-20" style="border: solid 0.5px #F1EEEA; border-radius:10px;padding: 20px;">
+      <h6 class="project-title"><strong><%= goal.title %></strong></h6>
+      <p class="project-byline"><%= goal.user.name %></p>
+      <%= cl_image_tag(goal.picture, :height => 150) unless goal.picture.blank? %>
+      <button id="myBtn10" type="button" name="button" onclick="var x = document.getElementById('descriptionGoal<%= goal.id %>'); if (x.style.display === 'none') {x.style.display = 'block';} else {x.style.display = 'none';}">See description</button>
+       <div id="descriptionGoal<%= goal.id %>" class="twelve columns hide">
+           <%= goal.description %>
+       </div>
+      <p class="project-content-extra"><%= goal.beneficiary.name %></p>
+      <div class="progress-bar blue stripes orange twelve columns">
+        <span style="width: <%= (goal.pledges_total/goal.target_amount)*100 %>%"></span>
+      </div>
+      <ul class="twelve columns">
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.target_amount, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Target</span>
+        </li>
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.penalty_amount, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Penalty</span>
+        </li>
+        <li class="project-footer">
+          <strong><%= goal.deadline %></strong>
+          <span class="project-footer-extra">Deadline</span>
+        </li>
+      </ul>
+      <ul class="twelve columns" style="margin-top:80px">
+        <li class="project-footer">
+          <strong><%= number_to_currency(goal.pledges_total, :unit => "S$") %></strong>
+          <span class="project-footer-extra">Total pledged</span>
+        </li>
+      </ul>
+      <h6>
+        <%= link_to like_goal_path(goal), remote: true, class: 'like', method: :put do %>
+          <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+          <span id="upvotes-<%=goal.id%>"><%= goal.get_upvotes.size %></span>
+        <% end %>
+
+
+        <%= link_to dislike_goal_path(goal), remote: true, class: 'dislike', method: :put do %>
+        <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+        <span id="downvotes-<%=goal.id%>"><%= goal.get_downvotes.size %></span>
+        <% end %>
+      </h6>
+      <%= form_for(@pledge) do |f| %>
+      <% if @pledge.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@pledge.errors.count, "error") %> prohibited this pledge from being saved:</h2>
+        <ul>
+          <% @pledge.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <div class="field">
+        <%= f.label :amount %>
+        <%= f.number_field :amount, placeholder: "Pledge amount", class: "u-full-width" %>
+      </div>
+      <%= f.hidden_field :goal_id, :value=> goal.id %>
+      <div class="actions">
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+        data-description="<%= goal.title %>"
+        data-email="<%= goal.user.email %>"
+        data-amount="<%= @pledge.amount %>">
+        </script>
+        <%= f.submit %>
+      </div>
+      <% end %>
+      <div class="hvr-underline-from-center">
+       <%= social_share_button_tag(goal.title, :url => goal_path(:id => goal.id)) %>
+     </div>
+
+    </div>
+    <% end %>
+  </div>
+  <br>
+  <%= will_paginate @goals %>
+</div>

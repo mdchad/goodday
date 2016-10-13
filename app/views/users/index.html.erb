@@ -1,0 +1,32 @@
+<div class="container">
+  <h1>Users</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Family Name</th>
+        <th>Email</th>
+        <th>Admin</th>
+        <th colspan="1"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.first_name %></td>
+          <td><%= user.family_name %></td>
+          <td><%= user.email %></td>
+          <td><%= link_to "#{user.is_admin?}", admin_user_path(user), method: :patch %></td>
+          <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <%= link_to 'Register User', register_path %>
+
+</div>
